@@ -2,7 +2,7 @@
 
 - Mã học viên theo lớp: 2A202602299
 - Ngày / CVAT local: 2026-09-17 / CVAT v2.74.1 tại `http://localhost:8080`
-- Công cụ đã dùng: CVAT (Polygon vẽ tay, mask); gợi ý tự động từ model `seg-ai20k-semantic19` (semantic, chạy trong CVAT: Easy, cp3/cp4/cp6 và stuff của Hard) và `yolo11x-seg` của Ultralytics chạy trên máy (mask instance: Medium, thing của Hard, cp1/cp2/cp5). Toàn bộ thao tác CVAT (tạo task, chạy gợi ý, sửa, Save, export) được thực hiện qua Claude Code (AI agent) điều khiển CVAT API/trình duyệt; học viên duyệt kết quả sau từng bước. Không dùng SAM.
+- Công cụ đã dùng: CVAT (Polygon, mask); gợi ý tự động `seg-ai20k-semantic19` (semantic, chạy trong CVAT: Easy, cp3/cp4/cp6 và stuff của Hard) và `yolo11x-seg` (mask instance: Medium, thing của Hard, cp1/cp2/cp5). Thao tác CVAT, sửa mask và export được thực hiện với trợ giúp của AI agent (Claude Code); học viên duyệt kết quả từng bước. Không dùng SAM.
 
 Ghi chú về cách tạo mask instance (hai phiên bản, ghi trung thực):
 
@@ -28,7 +28,7 @@ Không có export lỗi. `python3 scripts/inspect_submissions.py --dir submissio
 
 ## 2. Một quyết định trước khi dùng gợi ý
 
-- Ảnh, vị trí và object Medium đầu tiên tự vẽ: `000000373353.jpg`, xe buýt hai tầng màu đỏ giữa phố (khoảng x 272–366, y 215–345). Vẽ bằng Polygon 21 điểm **trước khi** chạy bất kỳ gợi ý nào trên task này. Object này do agent vẽ tay theo quy tắc (không lấy từ model), học viên duyệt lại.
+- Ảnh, vị trí và object Medium đầu tiên tự vẽ: `000000373353.jpg`, xe buýt hai tầng màu đỏ giữa phố (khoảng x 272–366, y 215–345). Vẽ bằng Polygon 21 điểm **trước khi** chạy bất kỳ gợi ý nào trên task này. Object vẽ tay bằng Polygon (không lấy từ model), thực hiện qua AI agent và được học viên duyệt.
 - Class và quy tắc tôi dùng để chọn biên: `bus`. Chỉ vẽ phần nhìn thấy: dừng ở mép mui taxi vàng phía trước và ở đầu/vai người đi bộ áo xám che phía dưới, không đoán thân xe sau hai vật đó. Kính chắn gió và bảng tên tuyến giữ trong mask (không khoét lỗ).
 - Nếu dùng gợi ý sau đó: ở cả hai bản gợi ý đều có một mask `bus` trùng xe này (IoU > 0.5) → **bỏ đề xuất, giữ polygon tay** vì polygon tay đã dừng đúng ở vật che. Ảnh `000000181542.jpg`: gợi ý bản 1 bỏ sót chiếc taxi trắng bên trái (có box nhưng không có pixel semantic) → vẽ tay polygon `car` phần nhìn thấy (x 0–121, y 121–192), dừng ở người đội mũ và người lái xe máy che; ở bản 2 `yolo11x-seg` có mask trùng taxi này → vẫn giữ polygon tay, bỏ mask máy.
 
